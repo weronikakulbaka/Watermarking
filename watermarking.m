@@ -9,6 +9,7 @@ for i=1 : length(filelist)
       oryginalImagePath = sprintf('./TrainingData/%s', filename.name);
       watermarkImage = 'watermark.png';
       fileName = filename.name;
+
       
       oryginalImagePath = imread(oryginalImagePath);
       oryginalImagePath=rgb2gray(oryginalImagePath);
@@ -21,10 +22,12 @@ for i=1 : length(filelist)
       extractedWatermarkImage = ext_watermark(oryginalImagePath, watermarkImage, watermarkedImage, fileName);
       showImages(oryginalImagePath,watermarkImage,watermarkedImage,extractedWatermarkImage);
       pointers(oryginalImagePath,watermarkImage);
+
   end
 end
 
 
+<<<<<<< Updated upstream
 function y=watermark(oryginalImage,watermark, fileName)
 host=oryginalImage;
 [m n p]=size(host);
@@ -54,6 +57,7 @@ ext=idwt2(extracted_watermark,water_mark_LH,water_mark_HL,water_mark_HH,'haar');
 imwrite(uint8(ext),strcat('./ExtractedWatermarks/',fileName)); 
 
 y = uint8(ext);
+
 end
 
 
@@ -70,6 +74,7 @@ figure
 end
 
 function pointers(img, wimg)
+
 %PSNR
 [peaksnr, snr] = psnr(wimg, img);
 fprintf('\n The Peak-SNR value is %0.4f', peaksnr);
@@ -111,4 +116,6 @@ piqeImg = piqe(img);
 piqeWimg = piqe(wimg);
 
 saveNoReferenceQualityMetricsToExcel(peaksnr, err, ber, ssimResult,multissimResult,multissim3Result);
+
 end
+
