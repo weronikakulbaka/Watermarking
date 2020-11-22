@@ -1,13 +1,10 @@
 function [] = attackWatermarkedImage(watermarkedFile,oryginalImagePath)
-    wimg = imread(watermarkedFile);
-    wimg=wimg(:,:,1);
-
-%ataki
-    %test funkcji ze zwracaniem parametru
+    wimg = uint8(watermarkedFile);
+  
     motion_attacked_image=  motionAttack(wimg);
   %   figure
     % imshowpair(uint8(img),motion_attacked_image,'montage'),title('Motion attack');  
-    [median_attacked_image]= medianAttack(uint8(wimg),3);
+  %  [median_attacked_image]= medianAttack(uint8(wimg),3);
    % figure
     % imshowpair(uint8(img),median_attacked_image,'montage'),title('Median attack');  
   
@@ -25,7 +22,7 @@ function [] = attackWatermarkedImage(watermarkedFile,oryginalImagePath)
      
    figure
     subplot(2,3,1)
-        imshow(imread(oryginalImagePath)),title('Obraz oryginalny');
+        imshow(oryginalImagePath),title('Obraz oryginalny');
     subplot(2,3,2)
         imshow(wimg),title('Oznakowany obraz');
     subplot(2,3,3)

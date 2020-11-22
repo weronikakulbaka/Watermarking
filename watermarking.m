@@ -21,6 +21,7 @@ for i=1 : length(filelist)
       extractedWatermarkImage = ext_watermark(oryginalImagePath, watermarkImage, watermarkedImage, fileName);
       showImages(oryginalImagePath,watermarkImage,watermarkedImage,extractedWatermarkImage);
       pointers(oryginalImagePath,watermarkImage);
+      attackWatermarkedImage(watermarkedImage,oryginalImagePath)
   end
 end
 

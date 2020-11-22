@@ -7,54 +7,30 @@ for i=1 : length(filelist)
   filename = filelist(i);
   if ~strcmp(filename.name , '.') && ~strcmp(filename.name , '..')
       oryginalImagePath = sprintf('./TrainingData/%s', filename.name);
-      watermarkFile = 'watermark.png';
+      watermarkImage = 'watermark.png';
       fileName = filename.name;
-      watermarked = watermark(oryginalImagePath, watermarkFile, fileName);
+      
+      oryginalImagePath = imread(oryginalImagePath);
+      oryginalImagePath=rgb2gray(oryginalImagePath);
+      
+      watermarkImage = imread(watermarkImage);
+      watermarkImage=rgb2gray(watermarkImage);
+      
+      
+      watermarkedImage = watermark(oryginalImagePath, watermarkImage, fileName);
+      extractedWatermarkImage = ext_watermark(oryginalImagePath, watermarkImage, watermarkedImage, fileName);
+      showImages(oryginalImagePath,watermarkImage,watermarkedImage,extractedWatermarkImage);
+      pointers(oryginalImagePath,watermarkImage);
+      attackWatermarkedImage(watermarkedFile,oryginalImagePath)
   end
 end
 
-filelist = dir('WatermarkedImages');
-for i=1 : length(filelist)
-  filename = filelist(i);
-  if ~strcmp(filename.name , '.') && ~strcmp(filename.name , '..')
-      oryginalImagePath = sprintf('./TrainingData/%s', filename.name);
-      watermarkFile = 'watermark.png';
-      watermarkedFile = sprintf('./WatermarkedImages/%s',filename.name);
-      fileName = filename.name;
-      ext_watermark(oryginalImagePath, watermarkFile, watermarkedFile, fileName);
-  end
-end
-
-filelist = dir('ExtractedWatermarks');
-for i=1 : length(filelist)
-  filename = filelist(i);
-  if ~strcmp(filename.name , '.') && ~strcmp(filename.name , '..')
-      oryginalImagePath = sprintf('./TrainingData/%s', filename.name);
-      watermarkFile = 'watermark.png';
-      watermarkedFile = sprintf('./WatermarkedImages/%s',filename.name);
-      extractedWatermark = sprintf('./ExtractedWatermarks/%s',filename.name);
-      showImages(oryginalImagePath,watermarkFile,watermarkedFile,extractedWatermark)
-  end
-end
-
-
-filelist = dir('TrainingData');
-for i=1 : length(filelist)
-  filename = filelist(i);
-  if ~strcmp(filename.name , '.') && ~strcmp(filename.name , '..')
-      oryginalImagePath = sprintf('./TrainingData/%s', filename.name);
-      watermarkedFile = sprintf('./WatermarkedImages/%s',filename.name);
-      pointers(oryginalImagePath,watermarkedFile);
-  end
-end
 
 function y=watermark(oryginalImage,watermark, fileName)
-host=imread(oryginalImage);
-host=rgb2gray(host);
+host=oryginalImage;
 [m n p]=size(host);
 [host_LL,host_LH,host_HL,host_HH]=dwt2(host,'haar');
-water_mark=imread(watermark);
-water_mark=rgb2gray(water_mark);
+water_mark=watermark;
 water_mark=imresize(water_mark,[m n]);
 [water_mark_LL,water_mark_LH,water_mark_HL,water_mark_HH]=dwt2(water_mark,'haar');
 water_marked_LL = host_LL + (0.03*water_mark_LL);
@@ -66,15 +42,13 @@ end
 
 
 function y=ext_watermark(oryginalImage,watermark,watermarkedImage,fileName)
-host=imread(oryginalImage);
-host=rgb2gray(host);
+host=oryginalImage;
 [m n p]=size(host);
 [host_LL,host_LH,host_HL,host_HH]=dwt2(host,'haar');
-water_mark=imread(watermark);
-water_mark=rgb2gray(water_mark);
+water_mark=watermark;
 water_mark=imresize(water_mark,[m n]);
 [water_mark_LL,water_mark_LH,water_mark_HL,water_mark_HH]=dwt2(water_mark,'haar');
-wm=imread(watermarkedImage);
+wm = watermarkedImage;
 [wm_LL,wm_LH,wm_HL,wm_HH]=dwt2(wm,'haar');
 extracted_watermark= (wm_LL-host_LL)/0.03;
 ext=idwt2(extracted_watermark,water_mark_LH,water_mark_HL,water_mark_HH,'haar');
@@ -83,24 +57,8 @@ imwrite(uint8(ext),strcat('./ExtractedWatermarks/',fileName));
 y = uint8(ext);
 end
 
-function y=convertImagesToGray(image)
-    image=rgb2gray(image);
-    y=image;
-do
 
 function showImages(oryginalImage,watermark,watermarkedImage,extractedWatermark)
-oryginalImage=imread(oryginalImage);
-oryginalImage=rgb2gray(oryginalImage);
-
-watermark=imread(watermark);
-watermark=rgb2gray(watermark);
-
-watermarkedImage=imread(watermarkedImage);
-watermarkedImage=rgb2gray(watermarkedImage);
-
-extractedWatermark=imread(extractedWatermark);
-extractedWatermark=rgb2gray(extractedWatermark);
-
 figure
     subplot(2,3,1)
         imshow(oryginalImage),title('Obraz oryginalny');
@@ -113,10 +71,6 @@ figure
 end
 
 function pointers(img, wimg)
-img = imread(img);
-img=rgb2gray(img);
-wimg = imread(wimg);
-
 %PSNR
 [peaksnr, snr] = psnr(wimg, img);
 fprintf('\n The Peak-SNR value is %0.4f', peaksnr);
@@ -158,5 +112,5 @@ piqeImg = piqe(img);
 piqeWimg = piqe(wimg);
 
 saveNoReferenceQualityMetricsToExcel(peaksnr, err, ber, ssimResult,multissimResult,multissim3Result);
-
 end
+
