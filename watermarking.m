@@ -15,13 +15,16 @@ for i=1 : length(filelist)
       
       watermarkImage = imread(watermarkImage);
       watermarkImage=rgb2gray(watermarkImage);
-      
+     
       
       watermarkedImage = watermark(oryginalImagePath, watermarkImage, fileName);
       extractedWatermarkImage = ext_watermark(oryginalImagePath, watermarkImage, watermarkedImage, fileName);
-      showImages(oryginalImagePath,watermarkImage,watermarkedImage,extractedWatermarkImage);
+    %  showImages(oryginalImagePath,watermarkImage,watermarkedImage,extractedWatermarkImage);
       pointers(oryginalImagePath,watermarkImage);
-      attackWatermarkedImage(watermarkedImage,oryginalImagePath)
+    % attackWatermarkedImage(watermarkedImage,oryginalImagePath)
+      calculateBERForRotatedWatermarkedImages(watermarkedImage,watermarkImage,oryginalImagePath, fileName);
+      
+     
   end
 end
 
@@ -114,3 +117,26 @@ piqeWimg = piqe(wimg);
 saveNoReferenceQualityMetricsToExcel(peaksnr, err, ber, ssimResult,multissimResult,multissim3Result);
 end
 
+
+
+function calculateBERForRotatedWatermarkedImages(watermarkedImage,watermarkImage,oryginalImagePath, fileName)
+      n = 0.01;
+      for k = 1 : 10
+      rotatedMarkedImage = imrotate(watermarkedImage,n,'bilinear','crop');
+      extractedWatermarkImage2 = ext_watermark(oryginalImagePath, watermarkImage, rotatedMarkedImage, fileName);
+      n=n-0.01;
+      
+      ber = biterr(watermarkImage, extractedWatermarkImage2);
+      checkforfile=exist(strcat(pwd,'\','Rotation.xls'),'file');
+      if checkforfile==0; 
+       header = {'ber'};
+       xlswrite('Rotation',header,'Sheetname','A1');
+       N=0;
+      else 
+       N=size(xlsread('Rotation','Sheetname'),1);
+      end
+      AA=strcat('A',num2str(N+2));
+      xlswrite('Rotation',ber,'Sheetname',AA);
+
+      end
+end
