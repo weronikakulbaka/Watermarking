@@ -2,14 +2,14 @@ clc;
 clear all;
 close all;
 
-filelist = dir('TrainingData');
+filelist = dir('medicalDB');
 for i=1 : length(filelist)
   filename = filelist(i);
   if ~strcmp(filename.name , '.') && ~strcmp(filename.name , '..')
-      oryginalImagePath = sprintf('./TrainingData/%s', filename.name);
-      watermarkImage = 'watermark.png';
+      oryginalImagePath = sprintf('./medicalDB/%s', filename.name);
+      watermarkImage = 'watermark_logo.png';
       fileName = filename.name;
-      
+
       oryginalImagePath = imread(oryginalImagePath);
       oryginalImagePath=rgb2gray(oryginalImagePath);
       
@@ -19,7 +19,7 @@ for i=1 : length(filelist)
       
       watermarkedImage = watermark(oryginalImagePath, watermarkImage, fileName);
       extractedWatermarkImage = ext_watermark(oryginalImagePath, watermarkImage, watermarkedImage, fileName);
-    %  showImages(oryginalImagePath,watermarkImage,watermarkedImage,extractedWatermarkImage);
+      showImages(oryginalImagePath,watermarkImage,watermarkedImage,extractedWatermarkImage);
       pointers(oryginalImagePath,watermarkImage);
     % attackWatermarkedImage(watermarkedImage,oryginalImagePath)
       calculateBERForRotatedWatermarkedImages(watermarkedImage,watermarkImage,oryginalImagePath, fileName);
