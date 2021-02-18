@@ -2,14 +2,14 @@ clc;
 clear all;
 close all;
 
-filelist = dir('TrainingData');
+filelist = dir('medicalDB');
 for i=1 : length(filelist)
   filename = filelist(i);
   if ~strcmp(filename.name , '.') && ~strcmp(filename.name , '..')
-      oryginalImagePath = sprintf('./TrainingData/%s', filename.name);
-      watermarkImage = 'watermark.png';
+      oryginalImagePath = sprintf('./medicalDB/%s', filename.name);
+      watermarkImage = 'watermark_logo.png';
       fileName = filename.name;
-      
+
       oryginalImagePath = imread(oryginalImagePath);
       oryginalImagePath=rgb2gray(oryginalImagePath);
       
@@ -20,11 +20,11 @@ for i=1 : length(filelist)
       watermarkedImage = watermark(oryginalImagePath, watermarkImage, fileName);
       extractedWatermarkImage = ext_watermark(oryginalImagePath, watermarkImage, watermarkedImage, fileName);
     % showImages(oryginalImagePath,watermarkImage,watermarkedImage,extractedWatermarkImage);
-      pointers(oryginalImagePath,watermarkImage);
+     % pointers(oryginalImagePath,watermarkImage);
   %   attackWatermarkedImage(watermarkedImage,oryginalImagePath)
      % rotateAttack(watermarkedImage,watermarkImage,oryginalImagePath, fileName);
      % motionAttack(watermarkedImage,watermarkImage,oryginalImagePath, fileName);
-      sharpenAttack(watermarkedImage,watermarkImage,oryginalImagePath, fileName);
+      sharpeningAttack(watermarkedImage,watermarkImage,oryginalImagePath, fileName);
 
      
   end
@@ -167,36 +167,34 @@ function[] = motionAttack(watermarkedImage,watermarkImage,oryginalImagePath, fil
 end
 
 
-
-
-function[] = sharpenAttack(watermarkedImage,watermarkImage,oryginalImagePath, fileName)
-     strength=0.02;
-     sharpen_attacked_image =  sharpenAttack(watermarkedImage,strength);
+function[] = sharpeningAttack(watermarkedImage,watermarkImage,oryginalImagePath, fileName)
+      strength=0.02;
+      sharpen_attacked_image =  sharpenAttack(watermarkedImage,strength);
      extractedWatermarkImage1 = ext_watermark(oryginalImagePath, watermarkImage, sharpen_attacked_image, fileName);
    
      strength=0.5;
      sharpen_attacked_image =  sharpenAttack(watermarkedImage,strength);
      extractedWatermarkImage2 = ext_watermark(oryginalImagePath, watermarkImage, sharpen_attacked_image, fileName);
      
-     strength=1;
+     strength=0.7;
      sharpen_attacked_image =  sharpenAttack(watermarkedImage,strength);
      extractedWatermarkImage3 = ext_watermark(oryginalImagePath, watermarkImage, sharpen_attacked_image, fileName);
      
-     strength=2;
+     strength=0;
      sharpen_attacked_image =  sharpenAttack(watermarkedImage,strength);
      extractedWatermarkImage4 = ext_watermark(oryginalImagePath, watermarkImage, sharpen_attacked_image, fileName);
      
-%      
-%      figure
-%     subplot(2,3,1)
-%         imshow(extractedWatermarkImage1),title('Obraz oryginalny');
-%     subplot(2,3,2)
-%         imshow(extractedWatermarkImage2),title('Znak wodny');
-%     subplot(2,3,3)
-%         imshow(extractedWatermarkImage3),title('Obraz oznakowany');
-%     subplot(2,3,4)
-%         imshow(extractedWatermarkImage4),title('Wyekstraktowany znak wodny');
-%      
+     
+     figure
+    subplot(2,3,1)
+        imshow(extractedWatermarkImage1),title('1');
+    subplot(2,3,2)
+        imshow(extractedWatermarkImage2),title('2');
+    subplot(2,3,3)
+        imshow(extractedWatermarkImage3),title('3');
+    subplot(2,3,4)
+        imshow(extractedWatermarkImage4),title('4');
+     
      
      %sharpen_attacked_image =  sharpenAttack(watermarkedImage,strength);
 
