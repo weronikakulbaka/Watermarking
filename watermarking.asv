@@ -2,14 +2,14 @@ clc;
 clear all;
 close all;
 
-filelist = dir('medicalDB');
+filelist = dir('TrainingData');
 for i=1 : length(filelist)
   filename = filelist(i);
   if ~strcmp(filename.name , '.') && ~strcmp(filename.name , '..')
-      oryginalImagePath = sprintf('./medicalDB/%s', filename.name);
-      watermarkImage = 'watermark_logo.png';
+      oryginalImagePath = sprintf('./TrainingData/%s', filename.name);
+      watermarkImage = 'watermark.png';
       fileName = filename.name;
-
+      
       oryginalImagePath = imread(oryginalImagePath);
       oryginalImagePath=rgb2gray(oryginalImagePath);
       
@@ -24,7 +24,7 @@ for i=1 : length(filelist)
   %   attackWatermarkedImage(watermarkedImage,oryginalImagePath)
      % rotateAttack(watermarkedImage,watermarkImage,oryginalImagePath, fileName);
      % motionAttack(watermarkedImage,watermarkImage,oryginalImagePath, fileName);
-      sharpeningAttack(watermarkedImage,watermarkImage,oryginalImagePath, fileName);
+      sharpenAttack(watermarkedImage,watermarkImage,oryginalImagePath, fileName);
 
      
   end
@@ -167,9 +167,11 @@ function[] = motionAttack(watermarkedImage,watermarkImage,oryginalImagePath, fil
 end
 
 
-function[] = sharpeningAttack(watermarkedImage,watermarkImage,oryginalImagePath, fileName)
-      strength=0.02;
-      sharpen_attacked_image =  sharpenAttack(watermarkedImage,strength);
+
+
+function[] = sharpenAttack(watermarkedImage,watermarkImage,oryginalImagePath, fileName)
+     strength=0.02;
+     sharpen_attacked_image =  sharpenAttack(watermarkedImage,strength);
      extractedWatermarkImage1 = ext_watermark(oryginalImagePath, watermarkImage, sharpen_attacked_image, fileName);
    
      strength=0.5;
@@ -184,17 +186,17 @@ function[] = sharpeningAttack(watermarkedImage,watermarkImage,oryginalImagePath,
      sharpen_attacked_image =  sharpenAttack(watermarkedImage,strength);
      extractedWatermarkImage4 = ext_watermark(oryginalImagePath, watermarkImage, sharpen_attacked_image, fileName);
      
-     
-     figure
-    subplot(2,3,1)
-        imshow(extractedWatermarkImage1),title('1');
-    subplot(2,3,2)
-        imshow(extractedWatermarkImage2),title('2');
-    subplot(2,3,3)
-        imshow(extractedWatermarkImage3),title('3');
-    subplot(2,3,4)
-        imshow(extractedWatermarkImage4),title('4');
-     
+%      
+%      figure
+%     subplot(2,3,1)
+%         imshow(extractedWatermarkImage1),title('Obraz oryginalny');
+%     subplot(2,3,2)
+%         imshow(extractedWatermarkImage2),title('Znak wodny');
+%     subplot(2,3,3)
+%         imshow(extractedWatermarkImage3),title('Obraz oznakowany');
+%     subplot(2,3,4)
+%         imshow(extractedWatermarkImage4),title('Wyekstraktowany znak wodny');
+%      
      
      %sharpen_attacked_image =  sharpenAttack(watermarkedImage,strength);
 
