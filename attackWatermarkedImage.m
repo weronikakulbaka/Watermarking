@@ -1,7 +1,7 @@
 function [] = attackWatermarkedImage(watermarkedFile,oryginalImagePath)
     wimg = uint8(watermarkedFile);
   
-    motion_attacked_image=  motionAttack(wimg);
+    motion_attacked_image=  motionAttack(wimg,7,4);
   %   figure
     % imshowpair(uint8(img),motion_attacked_image,'montage'),title('Motion attack');  
   %  [median_attacked_image]= medianAttack(uint8(wimg),3);
@@ -35,3 +35,4 @@ function [] = attackWatermarkedImage(watermarkedFile,oryginalImagePath)
         imshow(uint8(sharpen_attacked_image));title('Sharpen attack');
       
 end
+
