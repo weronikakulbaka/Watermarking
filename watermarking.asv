@@ -2,13 +2,13 @@ clc;
 clear all;
 close all;
 
-destinationFolder = 'MedicalDB';
+destinationFolder = 'TrainingData';
 
-filelist = dir(destinationFolder);
+filelist = dir('TrainingData');
 for i=1 : length(filelist)
   filename = filelist(i);
   if ~strcmp(filename.name , '.') && ~strcmp(filename.name , '..')
-      oryginalImagePath = sprintf('./%s/%s',destinationFolder, filename.name);
+      oryginalImagePath = sprintf('./TrainingData/%s', filename.name);
       watermarkImage = 'watermark_logo.png';
       fileName = filename.name;
 
