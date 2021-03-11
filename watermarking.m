@@ -1,13 +1,14 @@
 clc;
 clear all;
 close all;
-tic
-filelist = dir('medicalDB');
+
+destinationFolder = 'MedicalDB';
+
+filelist = dir(destinationFolder);
 for i=1 : length(filelist)
   filename = filelist(i);
   if ~strcmp(filename.name , '.') && ~strcmp(filename.name , '..')
-     
-      oryginalImagePath = sprintf('./medicalDB/%s', filename.name);
+      oryginalImagePath = sprintf('./%s/%s',destinationFolder, filename.name);
       watermarkImage = 'watermark_logo.png';
       fileName = filename.name;
 
@@ -59,32 +60,14 @@ end
 
 
 function y = watermark(oryginalImage,watermark, fileName)
-    host = oryginalImage;
-    [m, n , ~]=size(host);
-    [host_LL,host_LH,host_HL,host_HH]=dwt2(host,'db6');
-    water_mark = watermark;
-     water_mark = imresize(water_mark,[m n]);
-    [water_mark_LL,~,~,~]=dwt2(water_mark,'db6');
-    water_marked_LL = host_LL + (0.03*water_mark_LL);
-    watermarked = idwt2(water_marked_LL,host_LH,host_HL,host_HH,'db6');
-    imwrite(uint8(watermarked),strcat('./WatermarkedImages/',fileName)); 
-    y = uint8(watermarked);
+    %y = watermarkDWT(oryginalImage,watermark, fileName);
+    y = watermarkSVD(oryginalImage,watermark,fileName);
 end
 
 
 function [y] = ext_watermark(oryginalImage, watermark, watermarkedImage, fileName)
-    host = oryginalImage;
-    [m, n , ~] = size(host);
-    [host_LL,~,~,~] = dwt2(host,'db6');
-    water_mark = watermark;
-    water_mark = imresize(water_mark,[m n]);
-    [~,water_mark_LH,water_mark_HL,water_mark_HH] = dwt2(water_mark,'db6');
-    wm = watermarkedImage;
-    [wm_LL,~,~,~] = dwt2(wm,'db6');
-    extracted_watermark= (wm_LL-host_LL)/0.03;
-    ext = idwt2(extracted_watermark,water_mark_LH,water_mark_HL,water_mark_HH,'db6');
-    imwrite(uint8(ext),strcat('./ExtractedWatermarks/',fileName));  
-    y = uint8(ext);
+%    y = extractWatermarkDWT(oryginalImage, watermark, watermarkedImage, fileName);
+   y = extractWatermarkSVD(oryginalImage, watermark, watermarkedImage, fileName);
 end
 
 function pointers(img, wimg)
