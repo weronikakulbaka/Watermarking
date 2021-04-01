@@ -24,15 +24,15 @@ for i=1 : length(filelist)
           
     extractedWatermarkImage = ext_watermark(oryginalImagePath, watermarkImage, watermarkedImage, fileName);
    showImages(oryginalImagePath,watermarkImage,watermarkedImage,extractedWatermarkImage);
- %    pointers(oryginalImagePath,watermarkedImage);
+     pointers(oryginalImagePath,watermarkedImage);
      %attackWatermarkedImage(watermarkedImage,oryginalImagePath)
    %  rotateAttack(watermarkedImage,watermarkImage,oryginalImagePath, fileName);
    %  doMotionAttack(watermarkedImage,watermarkImage,oryginalImagePath, fileName);
    %   sharpeningAttack(watermarkedImage,watermarkImage,oryginalImagePath, fileName);
    %  doNoiseGaussAttack(watermarkedImage,watermarkImage,oryginalImagePath, fileName);
-% out = imtile({watermarkImage,watermarkImage}, 'BorderSize', 1, 'BackgroundColor','black');
-% figure
-% imshow(out);
+ %out = imtile({watermarkImage,extractedWatermarkImage}, 'BorderSize', 1, 'BackgroundColor','black');
+ %figure
+ %imshow(out);
 
 % timeElapsed = toc;
 % disp(timeElapsed)
@@ -60,14 +60,16 @@ end
 
 
 function y = watermark(oryginalImage,watermark, fileName)
-    %y = watermarkDWT(oryginalImage,watermark, fileName);
-    y = watermarkSVD(oryginalImage,watermark,fileName);
+   % y = watermarkDWT(oryginalImage,watermark, fileName);
+    %y = watermarkSVD(oryginalImage,watermark,fileName);
+    y = watermark_DWT_SVD(oryginalImage,watermark,fileName);
 end
 
 
 function [y] = ext_watermark(oryginalImage, watermark, watermarkedImage, fileName)
-%    y = extractWatermarkDWT(oryginalImage, watermark, watermarkedImage, fileName);
-   y = extractWatermarkSVD(oryginalImage, watermark, watermarkedImage, fileName);
+   % y = extractWatermarkDWT(oryginalImage, watermark, watermarkedImage, fileName);
+   %y = extractWatermarkSVD(oryginalImage, watermark, watermarkedImage, fileName);
+   y = extract_DWT_SVD(oryginalImage, watermark, watermarkedImage, fileName);
 end
 
 function pointers(img, wimg)

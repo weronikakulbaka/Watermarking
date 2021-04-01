@@ -1,12 +1,15 @@
 function [y] = watermarkDWT(oryginalImage,watermark, fileName)
-    host = oryginalImage;
-    [m, n , ~]=size(host);
-    [host_LL,host_LH,host_HL,host_HH]=dwt2(host,'haar');
-    water_mark = watermark;
-    water_mark = imresize(water_mark,[m n]);
-    [water_mark_LL,~,~,~]=dwt2(water_mark,'haar');
-    water_marked_LL = host_LL + (0.03*water_mark_LL);
-    watermarked = idwt2(water_marked_LL,host_LH,host_HL,host_HH,'haar');
+    %dwt na oryginalnym obrazie
+    img = oryginalImage;
+    [m, n , ~]=size(img);
+    [img_LL,img_LH,img_HL,img_HH]=dwt2(img,'haar');
+    %dwt na watermarku
+    wimg = watermark;
+    wimg = imresize(wimg,[m n]);
+    [wimg_LL,~,~,~]=dwt2(wimg,'haar');
+    %osadzanie
+    wimg_LL = img_LL + (0.03*wimg_LL);
+    watermarked = idwt2(wimg_LL,img_LH,img_HL,img_HH,'haar');
     imwrite(uint8(watermarked),strcat('./WatermarkedImages/',fileName)); 
     y = uint8(watermarked);
 end

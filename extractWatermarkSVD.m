@@ -1,5 +1,5 @@
 function [y] = extractWatermarkSVD(oryginalImage, watermark, watermarkedImage, fileName)
-alpha = 0.1;
+alpha = 0.03;
 
 %utworzenie macierzy z obrazu oryginalnego
 [U,S,V] = svd(double(oryginalImage));
