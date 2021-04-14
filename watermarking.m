@@ -2,7 +2,7 @@ clc;
 clear all;
 close all;
 
-destinationFolder = 'MedicalDB';
+destinationFolder = 'medicalDB';
 
 filelist = dir(destinationFolder);
 for i=1 : length(filelist)
@@ -17,18 +17,17 @@ for i=1 : length(filelist)
       
       watermarkImage = imread(watermarkImage);
       watermarkImage=rgb2gray(watermarkImage);
-      
-      
-
+ 
       watermarkedImage = watermark(oryginalImagePath, watermarkImage, fileName);
           
-    extractedWatermarkImage = ext_watermark(oryginalImagePath, watermarkImage, watermarkedImage, fileName);
-   showImages(oryginalImagePath,watermarkImage,watermarkedImage,extractedWatermarkImage);
-     pointers(oryginalImagePath,watermarkedImage);
+   extractedWatermarkImage = ext_watermark(oryginalImagePath, watermarkImage, watermarkedImage, fileName);
+   
+   %showImages(oryginalImagePath,watermarkImage,watermarkedImage,extractedWatermarkImage);
+   %  pointers(oryginalImagePath,extractedWatermarkImage);
      %attackWatermarkedImage(watermarkedImage,oryginalImagePath)
    %  rotateAttack(watermarkedImage,watermarkImage,oryginalImagePath, fileName);
-   %  doMotionAttack(watermarkedImage,watermarkImage,oryginalImagePath, fileName);
-   %   sharpeningAttack(watermarkedImage,watermarkImage,oryginalImagePath, fileName);
+    % doMotionAttack(watermarkedImage,watermarkImage,oryginalImagePath, fileName);
+      sharpeningAttack(watermarkedImage,watermarkImage,oryginalImagePath, fileName);
    %  doNoiseGaussAttack(watermarkedImage,watermarkImage,oryginalImagePath, fileName);
  %out = imtile({watermarkImage,extractedWatermarkImage}, 'BorderSize', 1, 'BackgroundColor','black');
  %figure
@@ -40,9 +39,8 @@ for i=1 : length(filelist)
 end
 
   end
-% timeElapsed = toc;
-% disp(timeElapsed)
-% saveTimeToExcel(timeElapsed);
+
+
 
 
 function[]  =saveTimeToExcel(time)
@@ -60,16 +58,21 @@ end
 
 
 function y = watermark(oryginalImage,watermark, fileName)
-   % y = watermarkDWT(oryginalImage,watermark, fileName);
-    %y = watermarkSVD(oryginalImage,watermark,fileName);
+
+ 
+%y = watermarkDWT(oryginalImage,watermark, fileName);
+  %   y = watermarkSVD(oryginalImage,watermark,fileName);
     y = watermark_DWT_SVD(oryginalImage,watermark,fileName);
+
 end
 
 
 function [y] = ext_watermark(oryginalImage, watermark, watermarkedImage, fileName)
-   % y = extractWatermarkDWT(oryginalImage, watermark, watermarkedImage, fileName);
-   %y = extractWatermarkSVD(oryginalImage, watermark, watermarkedImage, fileName);
-   y = extract_DWT_SVD(oryginalImage, watermark, watermarkedImage, fileName);
+  % y = extractWatermarkDWT(oryginalImage, watermark, watermarkedImage, fileName);
+% y = extractWatermarkSVD(oryginalImage, watermark, watermarkedImage, fileName);
+ 
+ y = extract_DWT_SVD(oryginalImage, watermark, watermarkedImage, fileName);
+
 end
 
 function pointers(img, wimg)
@@ -87,7 +90,7 @@ function pointers(img, wimg)
    % disp(mse);
  
     
-%saveNoReferenceQualityMetricsToExcel(brisqueImg, brisqueWimg, niqeImg, niqeWimg,piqeImg,piqeWimg);
+saveNoReferenceQualityMetricsToExcel(brisqueImg, brisqueWimg, niqeImg, niqeWimg,piqeImg,piqeWimg);
 saveFullReferenceQualityMetricsToExcel(peaksnr, ssimResult,multissimResult,multissim3Result,mse,maxerr,L2rat);
 end
 
@@ -96,66 +99,109 @@ function[] = rotateAttack(watermarkedImage,watermarkImage,oryginalImagePath, fil
      n = 0.01;
      rotatedMarkedImage = imrotate(watermarkedImage,n,'bilinear','crop');
      first = calculateBERafterAttack(rotatedMarkedImage,watermarkImage,oryginalImagePath, fileName);
-     
+     extractedWatermarkImage1 = ext_watermark(oryginalImagePath, watermarkImage, rotatedMarkedImage, fileName);
+
+
      n=0.1;
      rotatedMarkedImage = imrotate(watermarkedImage,n,'bilinear','crop');
      second = calculateBERafterAttack(rotatedMarkedImage,watermarkImage,oryginalImagePath, fileName);
       
-     n=0.15;
+     n=0.5;
      rotatedMarkedImage = imrotate(watermarkedImage,n,'bilinear','crop');
      third = calculateBERafterAttack(rotatedMarkedImage,watermarkImage,oryginalImagePath, fileName);
      
-     extractedWatermarkImage2 = ext_watermark(oryginalImagePath, watermarkImage, rotatedMarkedImage, fileName);
-
-     
-     n=0.2;
+     extractedWatermarkImage1 = ext_watermark(oryginalImagePath, watermarkImage, rotatedMarkedImage, fileName);
+% out = imtile({watermarkedImage,rotatedMarkedImage}, 'BorderSize', 1, 'BackgroundColor','black');
+% figure
+% imshow(out);  
+% 
+% out = imtile({watermarkImage,extractedWatermarkImage1}, 'BorderSize', 1, 'BackgroundColor','black');
+% figure
+% imshow(out);  
+% %      
+     n=10;
      rotatedMarkedImage = imrotate(watermarkedImage,n,'bilinear','crop');
      forth = calculateBERafterAttack(rotatedMarkedImage,watermarkImage,oryginalImagePath, fileName);
-     
-     n=0.3;
+          extractedWatermarkImage2 = ext_watermark(oryginalImagePath, watermarkImage, rotatedMarkedImage, fileName);
+
+     n=45;
      rotatedMarkedImage = imrotate(watermarkedImage,n,'bilinear','crop');
      fifth = calculateBERafterAttack(rotatedMarkedImage,watermarkImage,oryginalImagePath, fileName);
-     
-     n=0.4;
+      extractedWatermarkImage3 = ext_watermark(oryginalImagePath, watermarkImage, rotatedMarkedImage, fileName);
+
+     n=90;
      rotatedMarkedImage = imrotate(watermarkedImage,n,'bilinear','crop');
      sixth = calculateBERafterAttack(rotatedMarkedImage,watermarkImage,oryginalImagePath, fileName);
      
-     extractedWatermarkImage2 = ext_watermark(oryginalImagePath, watermarkImage, rotatedMarkedImage, fileName);
-
-      
+     extractedWatermarkImage4 = ext_watermark(oryginalImagePath, watermarkImage, rotatedMarkedImage, fileName);
+% out = imtile({watermarkedImage,rotatedMarkedImage}, 'BorderSize', 1, 'BackgroundColor','black');
+% figure
+% imshow(out);  
+% 
+% out = imtile({watermarkImage,extractedWatermarkImage4}, 'BorderSize', 1, 'BackgroundColor','black');
+% figure
+% imshow(out);  
+%     figure
+%     subplot(2,3,1)
+%         imshow(extractedWatermarkImage1),title('1');
+%     subplot(2,3,2)
+%         imshow(extractedWatermarkImage2),title('2');
+%     subplot(2,3,3)
+%         imshow(extractedWatermarkImage3),title('3');
+%     subplot(2,3,4)
+%         imshow(extractedWatermarkImage4),title('4');
      
-%      saveRotationDataToExcel(first, second, third,forth,fifth,sixth);
+     
+     
+      saveRotationDataToExcel(first, second, third,forth,fifth,sixth);
      
 end
 
-function[ber] = calculateBERafterAttack(attackedMarkedImage,watermarkImage,oryginalImagePath, fileName)
+function[ratio] = calculateBERafterAttack(attackedMarkedImage,watermarkImage,oryginalImagePath, fileName)
      extractedWatermarkImage2 = ext_watermark(oryginalImagePath, watermarkImage, attackedMarkedImage, fileName);
-     ber = biterr(watermarkImage, extractedWatermarkImage2);
+     [ber,ratio] = biterr(watermarkImage, extractedWatermarkImage2); 
+     ratio = ratio*100;
+ 
 end
 
 function[] = doMotionAttack(watermarkedImage,watermarkImage,oryginalImagePath, fileName)
-     len = 0.1;
-     theta = 4;
+     len = 2;
+     theta = 5;
      attacked_image = motionAttack(watermarkedImage,len,theta);
      first = calculateBERafterAttack(attacked_image,watermarkImage,oryginalImagePath, fileName);
+     extractedWatermarkImage1 = ext_watermark(oryginalImagePath, watermarkImage, attacked_image, fileName);
+
      
-     len = 0.5;
-     theta = 4;
+     len = 5;
+     theta = 10;
      attacked_image = motionAttack(watermarkedImage,len,theta);
      second = calculateBERafterAttack(attacked_image,watermarkImage,oryginalImagePath, fileName);
+     extractedWatermarkImage2 = ext_watermark(oryginalImagePath, watermarkImage, attacked_image, fileName);
+
      
-     len = 1;
-     theta = 4;
+     len = 20;
+     theta = 30;
      attacked_image = motionAttack(watermarkedImage,len,theta);
      third = calculateBERafterAttack(attacked_image,watermarkImage,oryginalImagePath, fileName);
-    
-     len = 2;
-     theta = 4;
+     extractedWatermarkImage3 = ext_watermark(oryginalImagePath, watermarkImage, attacked_image, fileName);
+
+     
+     len = 50;
+     theta = 70;
      attacked_image = motionAttack(watermarkedImage,len,theta);
      fourth = calculateBERafterAttack(attacked_image,watermarkImage,oryginalImagePath, fileName);
-    
-  
-     %saveMotionDataToExcel(first, second, third,fourth);
+     extractedWatermarkImage4 = ext_watermark(oryginalImagePath, watermarkImage, attacked_image, fileName);
+
+     
+     
+% out = imtile({watermarkedImage,attacked_image}, 'BorderSize', 1, 'BackgroundColor','black');
+% figure
+% imshow(out);  
+% 
+% out = imtile({watermarkImage,extractedWatermarkImage4}, 'BorderSize', 1, 'BackgroundColor','black');
+% figure
+% imshow(out); 
+     saveMotionDataToExcel(first, second, third,fourth);
      
 end
 
@@ -189,32 +235,41 @@ function[] = sharpeningAttack(watermarkedImage,watermarkImage,oryginalImagePath,
 %         imshow(extractedWatermarkImage4),title('4');
      
      
-      strength=0.02;
+      strength=0.5;
       sharpenAttackedImage =  sharpenAttack(watermarkedImage,strength);
       first = calculateBERafterAttack(sharpenAttackedImage,watermarkImage,oryginalImagePath, fileName);
+     extractedWatermarkImage1 = ext_watermark(oryginalImagePath, watermarkImage, sharpenAttackedImage, fileName);
 
-     strength=0.07;
+        
+     strength=7;
      sharpenAttackedImage =  sharpenAttack(watermarkedImage,strength);
       second = calculateBERafterAttack(sharpenAttackedImage,watermarkImage,oryginalImagePath, fileName);
+     extractedWatermarkImage2 = ext_watermark(oryginalImagePath, watermarkImage, sharpenAttackedImage, fileName);
 
-     strength=0.1;
+      
+      
+     strength=15;
      sharpenAttackedImage =  sharpenAttack(watermarkedImage,strength);
      third = calculateBERafterAttack(sharpenAttackedImage,watermarkImage,oryginalImagePath, fileName);
+     extractedWatermarkImage3 = ext_watermark(oryginalImagePath, watermarkImage, sharpenAttackedImage, fileName);
 
-     strength=1;
+     
+     strength=20;
      sharpenAttackedImage =  sharpenAttack(watermarkedImage,strength);
      fourth = calculateBERafterAttack(sharpenAttackedImage,watermarkImage,oryginalImagePath, fileName);
-% 
-%      extractedWatermarkImage2 = ext_watermark(oryginalImagePath, watermarkImage, sharpenAttackedImage, fileName);
-% 
-% out = imtile({watermarkedImage,sharpenAttackedImage}, 'BorderSize', 1, 'BackgroundColor','black');
+     extractedWatermarkImage4 = ext_watermark(oryginalImagePath, watermarkImage, sharpenAttackedImage, fileName);
+
+%      
+%      out = imtile({watermarkedImage,sharpenAttackedImage}, 'BorderSize', 1, 'BackgroundColor','black');
 % figure
 % imshow(out);  
-%      
+% 
+% out = imtile({watermarkImage,extractedWatermarkImage1}, 'BorderSize', 1, 'BackgroundColor','black');
+% figure
+% imshow(out);
      
      
-     
-   %  saveSharpenDataToExcel(first, second, third,fourth);
+     saveSharpenDataToExcel(first, second, third,fourth);
      
 end
 
