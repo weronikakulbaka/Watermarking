@@ -2,36 +2,36 @@ clc;
 clear all;
 close all;
 
-destinationFolder = 'medicalDB';
+destinationFolder = 'badania100';
 
 filelist = dir(destinationFolder);
 for i=1 : length(filelist)
   filename = filelist(i);
   if ~strcmp(filename.name , '.') && ~strcmp(filename.name , '..')
       oryginalImagePath = sprintf('./%s/%s',destinationFolder, filename.name);
-      watermarkImage = 'watermark_logo.png';
+      watermarkImage = 'logo20.png';
       fileName = filename.name;
 
       oryginalImagePath = imread(oryginalImagePath);
       oryginalImagePath=rgb2gray(oryginalImagePath);
       
-      watermarkImage = imread(watermarkImage);
-      watermarkImage=rgb2gray(watermarkImage);
+       watermarkImage = imread(watermarkImage);
+       watermarkImage=rgb2gray(watermarkImage);
  
       watermarkedImage = watermark(oryginalImagePath, watermarkImage, fileName);
           
    extractedWatermarkImage = ext_watermark(oryginalImagePath, watermarkImage, watermarkedImage, fileName);
    
-   %showImages(oryginalImagePath,watermarkImage,watermarkedImage,extractedWatermarkImage);
-   %  pointers(oryginalImagePath,extractedWatermarkImage);
-     %attackWatermarkedImage(watermarkedImage,oryginalImagePath)
-   %  rotateAttack(watermarkedImage,watermarkImage,oryginalImagePath, fileName);
-    % doMotionAttack(watermarkedImage,watermarkImage,oryginalImagePath, fileName);
-      sharpeningAttack(watermarkedImage,watermarkImage,oryginalImagePath, fileName);
-   %  doNoiseGaussAttack(watermarkedImage,watermarkImage,oryginalImagePath, fileName);
- %out = imtile({watermarkImage,extractedWatermarkImage}, 'BorderSize', 1, 'BackgroundColor','black');
- %figure
- %imshow(out);
+  %  showImages(oryginalImagePath,watermarkImage,watermarkedImage,extractedWatermarkImage);
+     pointers(oryginalImagePath,watermarkedImage);
+%      attackWatermarkedImage(watermarkedImage,oryginalImagePath)
+%     rotateAttack(watermarkedImage,watermarkImage,oryginalImagePath, fileName);
+%     doMotionAttack(watermarkedImage,watermarkImage,oryginalImagePath, fileName);
+%      sharpeningAttack(watermarkedImage,watermarkImage,oryginalImagePath, fileName);
+%     doNoiseGaussAttack(watermarkedImage,watermarkImage,oryginalImagePath, fileName);
+%  out = imtile({watermarkImage,extractedWatermarkImage}, 'BorderSize', 1, 'BackgroundColor','black');
+%  figure
+%  imshow(out);
 
 % timeElapsed = toc;
 % disp(timeElapsed)
@@ -39,6 +39,29 @@ for i=1 : length(filelist)
 end
 
   end
+
+% T = readmatrix('test');
+% figure
+% boxplot(T,'labels',{'0,01','0,1','0,5','10','45','90'})
+% title({'Wykres zależności wartości wkaźnika BER wyizolowanego znaku','wodnego od kąta obrotu obrazu oznakowanego metodą DWT-SVD'}) 
+% xlabel('Kąt obrotu [stopnie]')
+% ylabel('BER [%]')
+
+% 
+% T = readmatrix('test');
+% figure
+% boxplot(T,'labels',{'0,5','7','15','20'})
+% title({'Wykres zależności wartości wkaźnika BER wyizolowanego znaku','wodnego od poziomu wyostrzenia obrazu oznakowanego metodą S'}) 
+% xlabel('Poziom wyostrzenia [skalar liczbowy]')
+% ylabel('BER [%]')
+
+% T = readmatrix('test');
+% figure
+% boxplot(T,'labels',{'5','10','30','70'})
+% title({'Wykres zależności wartości wkaźnika BER wyizolowanego znaku','wodnego od poziomu rozmycia obrazu oznakowanego metodą DWT-SVD'}) 
+% xlabel('Kąt przesunięcia [skalar liczbowy]')
+% ylabel('BER [%]')
+
 
 
 
@@ -60,16 +83,16 @@ end
 function y = watermark(oryginalImage,watermark, fileName)
 
  
-%y = watermarkDWT(oryginalImage,watermark, fileName);
-  %   y = watermarkSVD(oryginalImage,watermark,fileName);
+% y = watermarkDWT(oryginalImage,watermark, fileName);
+%      y = watermarkSVD(oryginalImage,watermark,fileName);
     y = watermark_DWT_SVD(oryginalImage,watermark,fileName);
 
 end
 
 
 function [y] = ext_watermark(oryginalImage, watermark, watermarkedImage, fileName)
-  % y = extractWatermarkDWT(oryginalImage, watermark, watermarkedImage, fileName);
-% y = extractWatermarkSVD(oryginalImage, watermark, watermarkedImage, fileName);
+%    y = extractWatermarkDWT(oryginalImage, watermark, watermarkedImage, fileName);
+%   y = extractWatermarkSVD(oryginalImage, watermark, watermarkedImage, fileName);
  
  y = extract_DWT_SVD(oryginalImage, watermark, watermarkedImage, fileName);
 
@@ -77,9 +100,9 @@ end
 
 function pointers(img, wimg)
     [peaksnr] = psnr(wimg, img);
-    ssimResult = ssim(img,wimg);
-    multissimResult = multissim(img,wimg);
-    multissim3Result = multissim3(wimg,img,'Sigma',1);
+    ssimResult = ssim(wimg,img);
+    multissimResult = multissim(wimg,img);
+    multissim3Result = multissim3(img,wimg,'Sigma',1);
     brisqueImg = brisque(img);
     brisqueWimg = brisque(wimg);
     niqeImg = niqe(img);
